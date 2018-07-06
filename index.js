@@ -68,7 +68,8 @@ const slackUrlRouter = {
      */
     addMessage: function(message) {
         const processName = message.name;
-        const slackUrl = moduleConfig['slack_url-' + processName] || moduleConfig['slack_url'];
+        const event = message.event;
+        const slackUrl = moduleConfig['slack_url-' + processName + '-' + event] || moduleConfig['slack_url-' + processName] || moduleConfig['slack_url'];
 
         if (!slackUrl) {
             return;
@@ -83,7 +84,8 @@ const slackUrlRouter = {
             const config = {};
             configProperties.map((configPropertyName) => {
                 // Use process based custom configuration values if exist, else use the global configuration values.
-                config[configPropertyName] = moduleConfig[configPropertyName + '-' + processName] || moduleConfig[configPropertyName];
+                // config[configPropertyName] = moduleConfig[configPropertyName + '-' + processName] || moduleConfig[configPropertyName];
+                config[configPropertyName] = moduleConfig[configPropertyName + '-' + processName + '-' + event] || moduleConfig[configPropertyName + '-' + processName] || moduleConfig[configPropertyName];
             });
 
             this.messageQueues[slackUrl] = new MessageQueue(config);
